@@ -1,0 +1,104 @@
+@import "tailwindcss";
+
+/* ─── Light mode tokens ─────────────────────────────── */
+:root {
+  --bg-primary: #faf7f2;
+  --bg-secondary: #f3ebe0;
+  --surface: #ffffff;
+  --accent: #d9a6a0;
+  --accent-deep: #c08b84;
+  --accent-soft: #f0dcd8;
+  --ink: #3d3833;
+  --muted: #8a7362;
+  --line: #e5ddd1;
+}
+
+/* ─── Dark / Evening mode tokens ───────────────────── */
+html.dark {
+  --bg-primary: #2b2622;
+  --bg-secondary: #231f1b;
+  --surface: #33292380;
+  --accent: #d4908a;
+  --accent-deep: #e8a69f;
+  --accent-soft: #4a2f2c;
+  --ink: #f0e8de;
+  --muted: #a08878;
+  --line: #3d312b;
+}
+
+@theme inline {
+  --color-canvas: var(--bg-primary);
+  --color-cream: var(--bg-secondary);
+  --color-surface: var(--surface);
+  --color-accent: var(--accent);
+  --color-accent-deep: var(--accent-deep);
+  --color-accent-soft: var(--accent-soft);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --font-serif: var(--font-playfair);
+  --font-sans: var(--font-outfit);
+  --font-hand: var(--font-caveat);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg-primary);
+  color: var(--ink);
+  font-family: var(--font-outfit), sans-serif;
+  -webkit-font-smoothing: antialiased;
+  /* Smooth dark/light transition */
+  transition: background 0.4s ease, color 0.4s ease;
+}
+
+/* ─── Paper texture: static PNG tile (no runtime repaint) ─── */
+/* Render as background-image with a tiny repeating SVG raster. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0.03;
+  /* Pre-rasterized noise tile — no feTurbulence at runtime */
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAMbElEQVR4nO1dS47sOA40FJf/f5ND6YMFDGxgF3LTlVVV7e7HxHuSFCWKFCWKFCWKFCWKFCWKFCWKFCWKFCWKFCWKFCWKFCWKFCWKFCWKFKWLFB+klM/5P5EB");
+  background-size: 100px 100px;
+}
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--ink);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@keyframes shake-x {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-8px); }
+  40%, 80% { transform: translateX(8px); }
+}
+.animate-shake {
+  animation: shake-x 0.4s ease-in-out;
+}
+
+/* ─── Cursor: hide native on desktop ───────────────── */
+@media (pointer: fine) {
+  * {
+    cursor: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
