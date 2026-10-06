@@ -11,37 +11,13 @@ import ReasonsJar from "@/components/home/ReasonsJar";
 import LoadingScreen from "@/components/anniversary/LoadingScreen";
 import EnvelopeIntro from "@/components/anniversary/EnvelopeIntro";
 import IntroCover, { hideIntroCover } from "@/components/anniversary/IntroCover";
-
-const STEP_KEY = "anniversary_intro_step";
-const LEGACY_SEEN_KEY = "anniversary_intro_seen";
-
-type IntroStep = "loading" | "envelope" | "done";
-
-function readPersistedStep(): IntroStep {
-  try {
-    const raw = sessionStorage.getItem(STEP_KEY);
-    if (raw === "loading" || raw === "envelope" || raw === "done") return raw;
-    // Fallback flag versi lama: pernah selesai = langsung beranda.
-    if (sessionStorage.getItem(LEGACY_SEEN_KEY) === "true") return "done";
-  } catch {
-    // sessionStorage diblokir → anggap kunjungan baru.
-  }
-  return "loading";
-}
-
-function writePersistedStep(step: IntroStep) {
-  try {
-    sessionStorage.setItem(STEP_KEY, step);
-    if (step === "done") sessionStorage.setItem(LEGACY_SEEN_KEY, "true");
-  } catch {
-    // ignore — state in-memory tetap jalan untuk sesi ini.
-  }
-}
-
-function subscribeStorage(onChange: () => void) {
-  window.addEventListener("storage", onChange);
-  return () => window.removeEventListener("storage", onChange);
-}
+import {
+  readPersistedStep,
+  writePersistedStep,
+  subscribeIntroStorage,
+  type IntroStep,
+} from "@/lib/introState";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   // Progres intro dibaca via store (hydration-safe): saat hydration dipakai
@@ -49,11 +25,12 @@ export default function Home() {
   // dengan SSR. Sinkron ke nilai asli otomatis setelah hydration —
   // tanpa branch window di initializer, tanpa setState di effect.
   const persistedStep = useSyncExternalStore(
-    subscribeStorage,
+    subscribeIntroStorage,
     readPersistedStep,
-    () => "loading"
+    (): IntroStep => "loading"
   );
   const [introStep, setIntroStep] = useState<IntroStep>("loading");
+  const router = useRouter();
   // Transisi in-memory menang jika sudah bergerak; jika belum (fresh mount
   // ATAU remount pasca-regenerasi tree oleh React), lanjutkan progres
   // tersimpan — intro tidak pernah mengulang dari awal.
@@ -68,10 +45,13 @@ export default function Home() {
     setIntroStep("envelope");
   }, []);
 
+  // Selesai intro di beranda → langsung masuk ke /anniversary (Opsi B).
+  // introStep sengaja TIDAK di-set "done": UI envelope tetap terpasang
+  // sampai navigasi selesai, jadi tidak ada kilasan beranda sebelum pindah.
   const handleFinishIntro = useCallback(() => {
     writePersistedStep("done");
-    setIntroStep("done");
-  }, []);
+    router.push("/anniversary");
+  }, [router]);
 
   useEffect(() => {
     // Cover pre-paint sudah menutup layar sejak SSR; sembunyikan sekarang

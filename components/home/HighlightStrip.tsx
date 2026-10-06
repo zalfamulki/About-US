@@ -1,10 +1,32 @@
+"use client";
+
+import { useCallback, useState } from "react";
 import Link from "next/link";
+import { AnimatePresence, motion } from "motion/react";
 import PhotoPlaceholder from "@/components/ui/PhotoPlaceholder";
 import Reveal from "@/components/ui/Reveal";
 import SectionHeading from "@/components/ui/SectionHeading";
-import { highlights } from "@/lib/data";
+import ScrapbookLightbox, {
+  lightboxId,
+  type LightboxItem,
+} from "@/components/anniversary/ScrapbookLightbox";
+import { highlights, type Photo } from "@/lib/data";
 
 export default function HighlightStrip() {
+  const [selected, setSelected] = useState<Photo | null>(null);
+  const closeLightbox = useCallback(() => setSelected(null), []);
+
+  const selectedItem: LightboxItem | null = selected
+    ? {
+        id: `highlight-${selected.id}`,
+        title: selected.caption ?? `highlight #${selected.id}`,
+        date: selected.date,
+        location: selected.location,
+        tag: "highlight",
+        seed: selected.id,
+        photo: selected.src,
+      }
+    : null;
   return (
     <section className="py-20 md:py-24 bg-cream/60">
       <div className="mx-auto max-w-5xl px-6">
@@ -32,9 +54,18 @@ export default function HighlightStrip() {
                     : "w-56 h-72"
               }`}
             >
-              <PhotoPlaceholder seed={i} className="h-full w-full" />
+              {/* Klik foto → lightbox pratinjau (shared layout morph) */}
+              <motion.button
+                type="button"
+                layoutId={lightboxId(`highlight-${photo.id}`)}
+                onClick={() => setSelected(photo)}
+                aria-label={`Pratinjau ${photo.caption ?? `highlight #${photo.id}`}`}
+                className="block h-full w-full text-left"
+              >
+                <PhotoPlaceholder seed={i} className="h-full w-full" />
+              </motion.button>
               {photo.caption && (
-                <figcaption className="absolute inset-x-0 bottom-0 translate-y-2 bg-gradient-to-t from-ink/50 to-transparent px-4 pb-3 pt-8 text-xs text-white opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+                <figcaption className="pointer-events-none absolute inset-x-0 bottom-0 translate-y-2 bg-gradient-to-t from-ink/50 to-transparent px-4 pb-3 pt-8 text-xs text-white opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
                   {photo.caption}
                 </figcaption>
               )}
@@ -42,6 +73,17 @@ export default function HighlightStrip() {
           ))}
         </div>
       </Reveal>
+
+      {/* Fullscreen lightbox pratinjau */}
+      <AnimatePresence>
+        {selectedItem && (
+          <ScrapbookLightbox
+            key={selectedItem.id}
+            item={selectedItem}
+            onClose={closeLightbox}
+          />
+        )}
+      </AnimatePresence>
     </section>
   );
 }

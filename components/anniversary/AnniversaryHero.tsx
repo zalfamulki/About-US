@@ -4,10 +4,19 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform, useReducedMotion } from "motion/react";
 import { ArrowDown, Heart, Sparkles } from "lucide-react";
 import { couple } from "@/data/couple";
+import {
+  anniversaryStartLabel,
+  formatOrdinal,
+  yearWordEn,
+} from "@/lib/counter";
+import { useRelationshipDuration } from "@/lib/useRelationshipDuration";
 
 export default function AnniversaryHero() {
   const containerRef = useRef<HTMLElement>(null);
   const shouldReduceMotion = useReducedMotion();
+  // Realtime dari tanggal jadian — teks ikut bertambah tiap anniversary.
+  const duration = useRelationshipDuration();
+  const years = Math.max(duration.years, 1);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -51,7 +60,7 @@ export default function AnniversaryHero() {
         >
           <Sparkles size={14} className="text-accent-deep" />
           <span className="text-[11px] uppercase tracking-[0.25em] text-muted font-mono">
-            Chapter 1 · Two Years of Us
+            Chapter 1 · {yearWordEn(years)} Year{years > 1 ? "s" : ""} of Us
           </span>
         </motion.div>
 
@@ -62,7 +71,7 @@ export default function AnniversaryHero() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="font-hand text-2xl sm:text-3xl text-accent-deep mb-2"
         >
-          Happy 2nd Anniversary
+          Happy {formatOrdinal(years)} Anniversary
         </motion.p>
 
         {/* Names Header */}
@@ -88,7 +97,7 @@ export default function AnniversaryHero() {
         >
           <Heart size={14} className="fill-accent text-accent" />
           <span className="font-hand text-base text-ink">
-            6 Oktober 2024 — Sekarang
+            {anniversaryStartLabel()} — Sekarang
           </span>
         </motion.div>
 
@@ -99,7 +108,8 @@ export default function AnniversaryHero() {
           transition={{ duration: 0.6, delay: 0.5 }}
           className="max-w-xl text-base sm:text-lg md:text-xl text-muted leading-relaxed font-sans px-2"
         >
-          {couple.heroSubtitle}
+          {duration.totalDays}+ days, countless memories, and still my
+          favorite person.
         </motion.p>
 
         {/* CTA Button to scroll to relationship counter */}

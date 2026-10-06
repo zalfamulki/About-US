@@ -4,12 +4,16 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Heart, Sparkles, ArrowRight } from "lucide-react";
 import { couple } from "@/data/couple";
+import { formatOrdinal, yearWordEn } from "@/lib/counter";
+import { useRelationshipDuration } from "@/lib/useRelationshipDuration";
 
 type EnvelopeIntroProps = {
   onOpen: () => void;
 };
 
 export default function EnvelopeIntro({ onOpen }: EnvelopeIntroProps) {
+  const duration = useRelationshipDuration();
+  const years = Math.max(duration.years, 1);
   // Animation states: 'closed' -> 'opening' (flap opening) -> 'pulling' (paper rising) -> 'opened' (paper in front & ready)
   const [animState, setAnimState] = useState<"closed" | "opening" | "pulling" | "opened">("closed");
 
@@ -31,7 +35,6 @@ export default function EnvelopeIntro({ onOpen }: EnvelopeIntroProps) {
   };
 
   const isFlapOpen = animState !== "closed";
-  const isPaperRising = animState === "pulling" || animState === "opened";
   const isPaperInFront = animState === "opened";
 
   return (
@@ -132,16 +135,17 @@ export default function EnvelopeIntro({ onOpen }: EnvelopeIntroProps) {
           >
             <div className="w-10 h-1 bg-accent/40 rounded-full mb-2" />
             <p className="text-[10px] uppercase tracking-[0.25em] text-muted font-mono">
-              Happy 2nd Anniversary
+              Happy {formatOrdinal(years)} Anniversary
             </p>
             <h2 className="font-serif text-2xl text-ink mt-1 tracking-tight">
               {couple.person1} <span className="text-accent-deep font-hand text-3xl px-0.5">×</span> {couple.person2}
             </h2>
             <p className="font-hand text-lg text-accent-deep mt-0.5">
-              2 years of us ♡
+              {years} year{years > 1 ? "s" : ""} of us ♡
             </p>
             <p className="text-[11px] text-muted/80 font-sans italic mt-1 line-clamp-1">
-              &ldquo;{couple.relationshipQuote}&rdquo;
+              &ldquo;{yearWordEn(years)} years, countless memories, one
+              favorite person.&rdquo;
             </p>
 
             {animState === "opened" && (
@@ -193,7 +197,10 @@ export default function EnvelopeIntro({ onOpen }: EnvelopeIntroProps) {
                 exit={{ opacity: 0 }}
                 className="text-center font-hand text-xl text-accent-deep animate-pulse"
               >
-                Mengeluarkan surat cinta kita... ✨
+                <span className="inline-flex items-center gap-1.5">
+                  Mengeluarkan surat cinta kita...
+                  <Sparkles size={15} aria-hidden />
+                </span>
               </motion.div>
             )}
 

@@ -2,22 +2,15 @@
 // tanggal anniversary, quote, dan lagu. Sinkron dengan lib/counter.ts
 // (ANNIVERSARY = 6 Oktober 2024).
 //
-// NOTE nama: prompt menulis "Zalfa × Kia", tapi seluruh data & komponen
-// yang sudah ada memakai "Zall". Fase 1 sengaja tetap memakai "Zall"
-// agar tidak breaking; samakan ejaan sebelum dikirim ke pasangan
-// (lihat LANJUTAN-ANNIVERSARY.md §6).
+// NOTE nama: ejaan RESMI = "Zall" (keputusan 6 Okt 2026). Prompt asli
+// menulis "Zalfa", tapi seluruh data & komponen memakai "Zall" — jangan
+// pakai "Zalfa" lagi (lihat LANJUTAN-ANNIVERSARY.md §6).
 
 export const couple = {
   person1: "Zall",
   person2: "Kia",
 
   anniversaryDate: "2024-10-06",
-
-  relationshipQuote:
-    "Two years, countless memories, one favorite person.",
-
-  heroSubtitle:
-    "730+ days, countless memories, and still my favorite person.",
 
   song: {
     title: "Our Song",

@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Camera, Heart, Home, Image as ImageIcon, BookOpen, Mail } from "lucide-react";
+import { Camera, Cake, Heart, Home, Image as ImageIcon, BookOpen, Mail } from "lucide-react";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 
 const ITEMS = [
   { href: "/", label: "Home", icon: Home },
+  { href: "/anniversary", label: "Anniv", icon: Cake },
   { href: "/memories", label: "Memories", icon: BookOpen },
   { href: "/albums", label: "Albums", icon: ImageIcon },
   { href: "/letters", label: "Letters", icon: Mail },
@@ -28,15 +29,21 @@ export default function BottomNavMobile() {
       }}
       aria-label="Navigasi utama"
     >
-      {ITEMS.map(({ href, label, icon: Icon }) => {
-        const active =
-          href === "/" ? pathname === "/" : pathname.startsWith(href);
-        return (
-          <Link
-            key={href}
-            href={href}
-            aria-label={label}
-            className="flex flex-col items-center gap-0.5 rounded-full px-2 py-0.5 transition-colors"
+        {ITEMS.map(({ href, label, icon: Icon }) => {
+          const active =
+            href === "/" ? pathname === "/" : pathname.startsWith(href);
+          return (
+            <Link
+              key={href}
+              href={href}
+              aria-label={label}
+              onClick={(e) => {
+                if (pathname === href) {
+                  e.preventDefault();
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }
+              }}
+              className="flex flex-col items-center gap-0.5 rounded-full px-1.5 py-0.5 transition-colors"
             style={{ color: active ? "var(--accent-deep)" : "var(--muted)" }}
           >
             <Icon size={18} strokeWidth={1.75} />

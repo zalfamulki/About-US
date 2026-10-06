@@ -95,3 +95,69 @@ const MONTHS_ID = [
 export function formatDateID(date: Date): string {
   return `${date.getDate()} ${MONTHS_ID[date.getMonth()]} ${date.getFullYear()}`;
 }
+
+// Label tanggal jadian dalam Bahasa Indonesia, mis. "6 Oktober 2024".
+// Satu-satunya sumber kebenaran untuk teks tanggal jadian di seluruh web
+// — jangan hard-code tanggal di komponen.
+export function anniversaryStartLabel(): string {
+  return formatDateID(ANNIVERSARY);
+}
+
+// Tahun anniversary yang sedang dirayakan (penuh). 6 Okt 2024 → 6 Okt 2026 = 2.
+export function getCompletedYears(now: Date = new Date()): number {
+  return Math.max(0, getRelationshipDuration(now).years);
+}
+
+// 1 → "1st", 2 → "2nd", 3 → "3rd", 4 → "4th", 11-13 → "th".
+export function formatOrdinal(n: number): string {
+  const mod100 = n % 100;
+  if (mod100 >= 11 && mod100 <= 13) return `${n}th`;
+  switch (n % 10) {
+    case 1:
+      return `${n}st`;
+    case 2:
+      return `${n}nd`;
+    case 3:
+      return `${n}rd`;
+    default:
+      return `${n}th`;
+  }
+}
+
+const YEAR_WORDS_EN = [
+  "Zero",
+  "One",
+  "Two",
+  "Three",
+  "Four",
+  "Five",
+  "Six",
+  "Seven",
+  "Eight",
+  "Nine",
+  "Ten",
+];
+
+// "Two" untuk "Two Years of Us". Di luar 0–10 → angka digit.
+export function yearWordEn(n: number): string {
+  return YEAR_WORDS_EN[n] ?? String(n);
+}
+
+const YEAR_WORDS_ID = [
+  "nol",
+  "satu",
+  "dua",
+  "tiga",
+  "empat",
+  "lima",
+  "enam",
+  "tujuh",
+  "delapan",
+  "sembilan",
+  "sepuluh",
+];
+
+// "dua" untuk "dua tahun cerita kita". Di luar 0–10 → angka digit.
+export function yearWordId(n: number): string {
+  return YEAR_WORDS_ID[n] ?? String(n);
+}

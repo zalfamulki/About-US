@@ -18,7 +18,7 @@ export const insideJokes: InsideJoke[] = [
   },
   {
     id: "joke-2",
-    title: "Why did we even do that 😭",
+    title: "Why did we even do that",
     text: "Beli es krim terus duduk di trotoar sampai lampu jalan mati sendiri.",
     kind: "note",
   },

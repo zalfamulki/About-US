@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Moon, Sun } from "lucide-react";
 
 const STORAGE_KEY = "zall-kia-theme";
 type Theme = "light" | "dark";
@@ -70,7 +71,7 @@ export default function ThemeToggle() {
         }}
         aria-hidden
       >
-        {theme === "light" ? "🌙" : "☀️"}
+        {theme === "light" ? <Moon size={15} /> : <Sun size={15} />}
       </span>
     </button>
   );

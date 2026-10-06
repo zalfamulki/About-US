@@ -1,7 +1,14 @@
+"use client";
+
+import { useRelationshipDuration } from "@/lib/useRelationshipDuration";
+
 // Cover statis yang ikut ter-render di SSR HTML sebelum React hydration.
 // Tugasnya: menutup viewport dengan warna background sejak paint pertama,
 // sehingga tidak ada satu piksel pun konten beranda yang terlihat sebelum
 // intro anniversary mengambil alih.
+//
+// Teks ikut realtime dari tanggal jadian (hook punya snapshot server
+// tetap sehingga SSR deterministik).
 //
 // Disembunyikan via display:none (BUKAN .remove()) oleh hideIntroCover()
 // agar unmount React tetap aman (React akan error NotFoundError jika node
@@ -13,6 +20,9 @@ export function hideIntroCover() {
 }
 
 export default function IntroCover() {
+  const duration = useRelationshipDuration();
+  const years = Math.max(duration.years, 1);
+
   return (
     <div
       id="intro-cover"
@@ -36,7 +46,7 @@ export default function IntroCover() {
           color: "var(--ink, #3d3833)",
         }}
       >
-        2 years of us ♡
+        {years} year{years > 1 ? "s" : ""} of us ♡
       </p>
     </div>
   );

@@ -104,7 +104,12 @@ export default function LetterCard({ letter }: { letter: LoveLetter }) {
                     color: "var(--accent-deep)",
                   }}
                 >
-                  — Dengan cinta, {letter.from} 💌
+                  — Dengan cinta, {letter.from}{" "}
+                  <Mail
+                    size={15}
+                    aria-hidden
+                    style={{ display: "inline-block", verticalAlign: "-2px" }}
+                  />
                 </span>
               </div>
             </div>

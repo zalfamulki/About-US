@@ -35,7 +35,7 @@ export const quizQuestions: QuizQuestion[] = [
     answer: 3,
   },
   {
-    question: "Who is more annoying? 👀",
+    question: "Who is more annoying?",
     options: ["Zall", "Kia", "Seimbang", "Nggak ada yang ngaku"],
     answer: 2,
   },

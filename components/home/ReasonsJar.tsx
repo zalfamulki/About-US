@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Sparkles, RefreshCw } from "lucide-react";
+import { Sparkles, RefreshCw, Mail } from "lucide-react";
 import { reasonsILoveYou } from "@/lib/data";
 import Reveal from "@/components/ui/Reveal";
 
@@ -116,9 +116,10 @@ export default function ReasonsJar() {
                     rotate: isOpening ? [0, 15, -15, 0] : 0,
                   }}
                   transition={{ duration: 0.6, repeat: isOpening ? 0 : Infinity, repeatDelay: 2 }}
-                  style={{ fontSize: "36px" }}
+                  style={{ display: "flex" }}
+                  aria-hidden
                 >
-                  💌
+                  <Mail size={34} style={{ color: "var(--accent-deep)" }} />
                 </motion.span>
               </div>
             </motion.button>

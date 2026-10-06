@@ -1,36 +1,15 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
 import { motion } from "motion/react";
 import { Clock, Calendar, Heart, Sparkles, Moon, Laugh } from "lucide-react";
-import { getRelationshipDuration } from "@/lib/counter";
+import { yearWordId } from "@/lib/counter";
+import { useRelationshipDuration } from "@/lib/useRelationshipDuration";
 import ChapterHeading from "@/components/anniversary/ChapterHeading";
 import Reveal from "@/components/ui/Reveal";
 
-type Duration = ReturnType<typeof getRelationshipDuration>;
-
-const subscribe = () => () => {};
-
-let cache: { at: number; value: Duration } | null = null;
-
-function getSnapshot(): Duration {
-  const now = Date.now();
-  if (!cache || now - cache.at > 30_000) {
-    cache = { at: now, value: getRelationshipDuration(new Date(now)) };
-  }
-  return cache.value;
-}
-
-function getServerSnapshot(): Duration {
-  return getRelationshipDuration(new Date(2026, 9, 6));
-}
-
 export default function CelebrationCounter() {
-  const duration = useSyncExternalStore(
-    subscribe,
-    getSnapshot,
-    getServerSnapshot
-  );
+  const duration = useRelationshipDuration();
+  const years = Math.max(duration.years, 1);
 
   const totalMonths = duration.years * 12 + duration.months;
   const totalHours = duration.totalDays * 24;
@@ -40,7 +19,7 @@ export default function CelebrationCounter() {
     {
       value: `${duration.years}`,
       unit: "Years",
-      subtext: "dua tahun penuh cerita",
+      subtext: `${yearWordId(years)} tahun penuh cerita`,
       icon: Heart,
     },
     {
@@ -124,7 +103,7 @@ export default function CelebrationCounter() {
       {/* Playful footer note */}
       <Reveal delay={0.5} className="mt-12 text-center">
         <p className="font-hand text-xl text-muted">
-          &ldquo;730+ hari, dan kamu masih jadi orang favoritku setiap harinya.&rdquo;
+          &ldquo;{duration.totalDays}+ hari, dan kamu masih jadi orang favoritku setiap harinya.&rdquo;
         </p>
       </Reveal>
     </section>

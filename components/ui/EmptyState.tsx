@@ -1,5 +1,6 @@
 "use client";
 
+import { ImagePlus } from "lucide-react";
 import Reveal from "@/components/ui/Reveal";
 
 type EmptyStateProps = {
@@ -24,8 +25,8 @@ export default function EmptyState({
           boxShadow: "0 8px 24px rgba(61,56,51,0.04)",
         }}
       >
-        <span aria-hidden style={{ fontSize: "36px", display: "block" }}>
-          🖼️
+        <span aria-hidden style={{ display: "flex", justifyContent: "center" }}>
+          <ImagePlus size={36} style={{ color: "var(--accent)" }} />
         </span>
         <p
           style={{

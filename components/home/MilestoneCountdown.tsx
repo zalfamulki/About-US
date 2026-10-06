@@ -9,12 +9,29 @@ import {
 
 const subscribe = () => () => {};
 
-function getSnapshot() {
-  const now = new Date();
-  return {
-    anniversary: getNextAnniversary(now),
-    dayMilestone: getNextDayMilestone(now),
-  };
+type Snapshot = {
+  anniversary: ReturnType<typeof getNextAnniversary>;
+  dayMilestone: ReturnType<typeof getNextDayMilestone>;
+};
+
+// WAJIB di-cache: getSnapshot harus mengembalikan referensi stabil.
+// Objek baru setiap render = React mengira store berubah terus
+// = infinite loop (React error #185, ditemukan via browser test Fase 3).
+let cache: { at: number; value: Snapshot } | null = null;
+
+function getSnapshot(): Snapshot {
+  const now = Date.now();
+  if (!cache || now - cache.at > 60_000) {
+    const date = new Date(now);
+    cache = {
+      at: now,
+      value: {
+        anniversary: getNextAnniversary(date),
+        dayMilestone: getNextDayMilestone(date),
+      },
+    };
+  }
+  return cache.value;
 }
 
 function getServerSnapshot() {

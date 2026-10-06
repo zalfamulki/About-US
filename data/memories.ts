@@ -82,9 +82,22 @@ export const memories: Memory[] = [
   },
 ];
 
+// Caption playful untuk lightbox & strip — nada sesuai prompt:
+// personal, sedikit malu-malu, tidak formal.
+const HIGHLIGHT_CAPTIONS = [
+  "you looked cute here ♡",
+  "we had no idea this day would become a memory.",
+  "one of my favorite ordinary days.",
+  "why were we like this.",
+  "kantin corner, as usual.",
+  "foto ke-99 dari 100.",
+  "that laugh. that day.",
+  "disimpan baik-baik ♡",
+];
+
 export const highlights: Photo[] = Array.from({ length: 8 }, (_, i) => ({
   id: i + 1,
-  caption: i % 2 === 0 ? `momen #${i + 1}` : undefined,
+  caption: HIGHLIGHT_CAPTIONS[i % HIGHLIGHT_CAPTIONS.length],
   date: i % 3 === 0 ? "Okt 2024" : undefined,
   location: i % 4 === 0 ? "Bandung" : undefined,
   isHighlight: true,

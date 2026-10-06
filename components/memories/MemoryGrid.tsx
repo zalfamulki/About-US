@@ -1,12 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import Reveal from "@/components/ui/Reveal";
 import PhotoPlaceholder from "@/components/ui/PhotoPlaceholder";
 import HeartLike from "@/components/ui/HeartLike";
 import EmptyState from "@/components/ui/EmptyState";
-import { memories, TAG_LABELS, type MemoryTag } from "@/lib/data";
+import ScrapbookLightbox, {
+  lightboxId,
+  type LightboxItem,
+} from "@/components/anniversary/ScrapbookLightbox";
+import { memories, TAG_LABELS, type Memory, type MemoryTag } from "@/lib/data";
 
 type Filter = MemoryTag | "all";
 
@@ -14,8 +19,26 @@ const FILTERS: Filter[] = ["all", ...((Object.keys(TAG_LABELS) as Filter[]))];
 
 export default function MemoryGrid() {
   const [active, setActive] = useState<Filter>("all");
+  const [selected, setSelected] = useState<Memory | null>(null);
+  const closeLightbox = useCallback(() => setSelected(null), []);
   const filtered =
     active === "all" ? memories : memories.filter((m) => m.tag === active);
+
+  const selectedItem: LightboxItem | null = selected
+    ? {
+        id: `memory-${selected.slug}`,
+        title: selected.title,
+        date: selected.date,
+        location: selected.location,
+        tag: TAG_LABELS[selected.tag],
+        story: selected.story,
+        note: selected.note,
+        quote: selected.quote,
+        seed: memories.indexOf(selected) + 3,
+        photo: selected.photo,
+        detailHref: `/memories/${selected.slug}`,
+      }
+    : null;
 
   return (
     <div>
@@ -39,14 +62,19 @@ export default function MemoryGrid() {
         {filtered.map((memory, i) => (
           <Reveal key={memory.slug} delay={(i % 3) * 0.08}>
             <div className="relative group block h-full rounded-[4px] bg-white p-4 pb-6 shadow-[0_12px_35px_rgba(61,56,51,0.1)] transition-transform duration-500 hover:-translate-y-1">
-              <Link href={`/memories/${memory.slug}`}>
-                <div className={i % 2 === 0 ? "-rotate-1" : "rotate-1"}>
-                  <PhotoPlaceholder
-                    seed={i + 3}
-                    className="aspect-[4/5] rounded-sm transition-transform duration-500 group-hover:rotate-0"
-                  />
-                </div>
-              </Link>
+              {/* Klik foto → lightbox pratinjau (shared layout morph) */}
+              <motion.button
+                type="button"
+                layoutId={lightboxId(`memory-${memory.slug}`)}
+                onClick={() => setSelected(memory)}
+                aria-label={`Pratinjau ${memory.title}`}
+                className={`block w-full text-left ${i % 2 === 0 ? "-rotate-1" : "rotate-1"}`}
+              >
+                <PhotoPlaceholder
+                  seed={i + 3}
+                  className="aspect-[4/5] rounded-sm transition-transform duration-500 group-hover:rotate-0"
+                />
+              </motion.button>
 
               <div className="mt-5 flex items-center justify-between">
                 <p className="text-[11px] uppercase tracking-[0.25em] text-muted">
@@ -74,6 +102,17 @@ export default function MemoryGrid() {
           message="tapi akan segera ditambah..."
         />
       )}
+
+      {/* Fullscreen lightbox pratinjau */}
+      <AnimatePresence>
+        {selectedItem && (
+          <ScrapbookLightbox
+            key={selectedItem.id}
+            item={selectedItem}
+            onClose={closeLightbox}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

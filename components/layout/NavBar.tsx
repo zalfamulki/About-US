@@ -6,6 +6,7 @@ import ThemeToggle from "@/components/ui/ThemeToggle";
 
 const LINKS = [
   { href: "/", label: "Home" },
+  { href: "/anniversary", label: "Anniversary", highlight: true },
   { href: "/memories", label: "Memories" },
   { href: "/albums", label: "Albums" },
   { href: "/letters", label: "Letters" },
@@ -27,17 +28,34 @@ export default function NavBar() {
           WebkitBackdropFilter: "blur(20px)",
         }}
       >
-        {LINKS.map(({ href, label }) => {
+        {LINKS.map(({ href, label, highlight }) => {
           const active =
             href === "/" ? pathname === "/" : pathname.startsWith(href);
           return (
             <Link
               key={href}
               href={href}
+              onClick={(e) => {
+                // Sudah di halaman ini → cukup scroll ke atas (rasa "reset").
+                if (pathname === href) {
+                  e.preventDefault();
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }
+              }}
               className={`text-[13px] tracking-wide transition-colors ${
-                active ? "text-accent-deep font-medium" : "text-muted hover:text-ink"
+                highlight && active
+                  ? "rounded-full border px-3.5 py-1.5 font-medium"
+                  : `${active ? "text-accent-deep font-medium" : "text-muted hover:text-ink"}`
               }`}
-              style={{ color: active ? "var(--accent-deep)" : undefined }}
+              style={
+                highlight && active
+                  ? {
+                      background: "var(--accent-deep)",
+                      borderColor: "var(--accent-deep)",
+                      color: "#fff",
+                    }
+                  : { color: active ? "var(--accent-deep)" : undefined }
+              }
             >
               {label}
             </Link>

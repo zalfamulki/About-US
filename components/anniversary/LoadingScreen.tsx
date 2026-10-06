@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { Heart, Star, Sparkles } from "lucide-react";
+import { yearWordId } from "@/lib/counter";
+import { useRelationshipDuration } from "@/lib/useRelationshipDuration";
 
 type LoadingScreenProps = {
   onDone: () => void;
@@ -24,6 +26,8 @@ const FLOATING_ITEMS = [
 
 export default function LoadingScreen({ onDone }: LoadingScreenProps) {
   const shouldReduceMotion = useReducedMotion();
+  const duration = useRelationshipDuration();
+  const years = Math.max(duration.years, 1);
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [typedText, setTypedText] = useState("");
   const fullText = "Preparing something special...";
@@ -156,7 +160,7 @@ export default function LoadingScreen({ onDone }: LoadingScreenProps) {
           </motion.div>
         )}
 
-        {/* Step 2: 2 years of us ♡ */}
+        {/* Step 2: N years of us ♡ */}
         {step === 2 && (
           <motion.div
             key="step2"
@@ -175,10 +179,10 @@ export default function LoadingScreen({ onDone }: LoadingScreenProps) {
               <span>Chapter 1</span>
             </div>
             <h1 className="font-serif text-3xl md:text-4xl text-ink font-normal tracking-tight">
-              2 years of us <span className="text-accent-deep font-hand text-4xl">♡</span>
+              {years} year{years > 1 ? "s" : ""} of us <span className="text-accent-deep font-hand text-4xl">♡</span>
             </h1>
             <p className="font-hand text-lg text-muted mt-1">
-              dua tahun cerita kita
+              {yearWordId(years)} tahun cerita kita
             </p>
           </motion.div>
         )}
@@ -219,7 +223,10 @@ export default function LoadingScreen({ onDone }: LoadingScreenProps) {
         onClick={onDone}
         className="absolute bottom-10 inset-x-0 mx-auto text-center font-hand text-muted/70 text-sm hover:text-accent-deep transition-colors cursor-pointer bg-transparent border-0"
       >
-        ketuk di mana saja untuk lanjut ✨
+        <span className="inline-flex items-center gap-1.5">
+          ketuk di mana saja untuk lanjut
+          <Sparkles size={14} aria-hidden />
+        </span>
       </button>
     </div>
   );
