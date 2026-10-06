@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useSyncExternalStore } from "react";
+import dynamic from "next/dynamic";
 import { AnimatePresence, motion } from "motion/react";
 import LoadingScreen from "@/components/anniversary/LoadingScreen";
 import EnvelopeIntro from "@/components/anniversary/EnvelopeIntro";
@@ -10,12 +11,20 @@ import CinematicTimeline from "@/components/anniversary/CinematicTimeline";
 import LoveCards from "@/components/anniversary/LoveCards";
 import FavoriteThings from "@/components/anniversary/FavoriteThings";
 import LoveLetterMain from "@/components/anniversary/LoveLetterMain";
-import Celebration from "@/components/anniversary/Celebration";
-import FinalSurprise from "@/components/anniversary/FinalSurprise";
 import MusicPlayer from "@/components/anniversary/MusicPlayer";
 import EasterEggs from "@/components/anniversary/EasterEggs";
 import ChapterHeading from "@/components/anniversary/ChapterHeading";
 import IntroCover, { hideIntroCover } from "@/components/anniversary/IntroCover";
+// Chapter berat (canvas-confetti) di-split agar JS awal ringan — keduanya
+// di bawah lipatan, jadi dimuat terpisah tanpa first-paint ikut besar.
+const Celebration = dynamic(
+  () => import("@/components/anniversary/Celebration"),
+  { ssr: false }
+);
+const FinalSurprise = dynamic(
+  () => import("@/components/anniversary/FinalSurprise"),
+  { ssr: false }
+);
 import {
   readPersistedStep,
   writePersistedStep,

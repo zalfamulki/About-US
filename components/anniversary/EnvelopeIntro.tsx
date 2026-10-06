@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { Heart, Sparkles, ArrowRight } from "lucide-react";
 import { couple } from "@/data/couple";
 import { formatOrdinal, yearWordEn } from "@/lib/counter";
@@ -12,6 +12,7 @@ type EnvelopeIntroProps = {
 };
 
 export default function EnvelopeIntro({ onOpen }: EnvelopeIntroProps) {
+  const reduce = useReducedMotion();
   const duration = useRelationshipDuration();
   const years = Math.max(duration.years, 1);
   // Animation states: 'closed' -> 'opening' (flap opening) -> 'pulling' (paper rising) -> 'opened' (paper in front & ready)
@@ -62,7 +63,7 @@ export default function EnvelopeIntro({ onOpen }: EnvelopeIntroProps) {
       </div>
 
       <motion.div
-        initial={{ opacity: 0, scale: 0.94, y: 15 }}
+        initial={reduce ? false : { opacity: 0, scale: 0.94, y: 15 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
         className="relative flex flex-col items-center max-w-sm w-full"

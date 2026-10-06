@@ -43,7 +43,7 @@ export default function BottomNavMobile() {
                   window.scrollTo({ top: 0, behavior: "smooth" });
                 }
               }}
-              className="flex flex-col items-center gap-0.5 rounded-full px-1.5 py-0.5 transition-colors"
+              className="flex min-h-[44px] flex-col items-center justify-center gap-0.5 rounded-full px-1.5 py-0.5 transition-colors"
             style={{ color: active ? "var(--accent-deep)" : "var(--muted)" }}
           >
             <Icon size={18} strokeWidth={1.75} />

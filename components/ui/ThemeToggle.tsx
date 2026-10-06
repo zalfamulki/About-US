@@ -42,6 +42,7 @@ export default function ThemeToggle() {
       onClick={toggle}
       aria-label={theme === "light" ? "Aktifkan mode malam" : "Aktifkan mode siang"}
       id="theme-toggle-btn"
+      className="max-md:min-h-[44px] max-md:min-w-[44px]"
       style={{
         background: "none",
         border: "none",

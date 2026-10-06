@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { Sparkles, RefreshCw, Mail } from "lucide-react";
 import { reasonsILoveYou } from "@/lib/data";
 import Reveal from "@/components/ui/Reveal";
 
 export default function ReasonsJar() {
+  const reduce = useReducedMotion();
   const [currentReason, setCurrentReason] = useState<string | null>(null);
   const [drawnCount, setDrawnCount] = useState(0);
   const [isOpening, setIsOpening] = useState(false);
@@ -109,13 +110,17 @@ export default function ReasonsJar() {
                   }}
                 />
 
-                {/* Heart inside jar */}
+                {/* Heart inside jar (diam saat reduced-motion) */}
                 <motion.span
-                  animate={{
-                    scale: isOpening ? [1, 1.3, 1] : [1, 1.1, 1],
-                    rotate: isOpening ? [0, 15, -15, 0] : 0,
-                  }}
-                  transition={{ duration: 0.6, repeat: isOpening ? 0 : Infinity, repeatDelay: 2 }}
+                  animate={
+                    reduce
+                      ? { scale: 1, rotate: 0 }
+                      : {
+                          scale: isOpening ? [1, 1.3, 1] : [1, 1.1, 1],
+                          rotate: isOpening ? [0, 15, -15, 0] : 0,
+                        }
+                  }
+                  transition={{ duration: 0.6, repeat: isOpening || reduce ? 0 : Infinity, repeatDelay: 2 }}
                   style={{ display: "flex" }}
                   aria-hidden
                 >

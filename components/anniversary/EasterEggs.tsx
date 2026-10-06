@@ -159,7 +159,7 @@ export default function EasterEggs() {
               type="button"
               onClick={dismiss}
               aria-label="Tutup pesan rahasia"
-              className="absolute top-2 right-2 flex h-8 w-8 items-center justify-center rounded-full text-muted transition-colors hover:text-ink cursor-pointer"
+              className="absolute top-1 right-1 flex h-11 w-11 items-center justify-center rounded-full text-muted transition-colors hover:text-ink cursor-pointer"
             >
               <X size={14} />
             </button>

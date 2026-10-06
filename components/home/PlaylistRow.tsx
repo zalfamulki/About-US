@@ -2,12 +2,13 @@
 
 import { useState } from "react";
 import { Play, Pause, ExternalLink } from "lucide-react";
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import Reveal from "@/components/ui/Reveal";
 import SectionHeading from "@/components/ui/SectionHeading";
 import { playlist } from "@/lib/data";
 
 export default function PlaylistRow() {
+  const reduce = useReducedMotion();
   const [playingIndex, setPlayingIndex] = useState<number | null>(null);
 
   const togglePlay = (index: number) => {
@@ -74,19 +75,23 @@ export default function PlaylistRow() {
                     </p>
                   </div>
 
-                  {/* Mini Animated Equalizer */}
+                  {/* Mini Animated Equalizer (diam saat reduced-motion) */}
                   {isPlaying ? (
                     <div className="flex items-end gap-1 h-5 px-2">
                       {[0, 1, 2, 3].map((b) => (
                         <motion.span
                           key={b}
-                          animate={{ height: ["20%", "100%", "30%", "80%"] }}
-                          transition={{
-                            duration: 0.6 + b * 0.15,
-                            repeat: Infinity,
-                            repeatType: "reverse",
-                            ease: "easeInOut",
-                          }}
+                          animate={reduce ? { height: "50%" } : { height: ["20%", "100%", "30%", "80%"] }}
+                          transition={
+                            reduce
+                              ? { duration: 0 }
+                              : {
+                                  duration: 0.6 + b * 0.15,
+                                  repeat: Infinity,
+                                  repeatType: "reverse",
+                                  ease: "easeInOut",
+                                }
+                          }
                           style={{
                             width: "3px",
                             background: "var(--accent-deep)",
